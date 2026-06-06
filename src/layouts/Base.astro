@@ -6,6 +6,7 @@ import ReserveModal from "../components/ReserveModal.astro";
 import Icon from "../components/Icon.astro";
 import Analytics from "@vercel/analytics/astro";
 import { ClientRouter } from "astro:transitions";
+import { site, wines } from "../data/site";
 
 interface Props {
   title?: string;
@@ -20,6 +21,48 @@ const {
 const siteUrl = Astro.site ?? "https://demo-wijndomein-de-boe.vercel.app";
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const ogImageAbs = new URL(ogImage, siteUrl).href;
+
+// Structured data: winery + producten (echte webshop-data)
+const priceNum = (p: string) => Number(String(p).replace(/\./g, "").replace(",", "."));
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["Winery", "LocalBusiness"],
+      "@id": siteUrl + "#winery",
+      name: site.name,
+      description,
+      url: siteUrl,
+      telephone: site.phone,
+      email: site.email,
+      image: ogImageAbs,
+      priceRange: "€€",
+      address: { "@type": "PostalAddress", streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: "NL" },
+      sameAs: [site.social.instagram, site.social.facebook],
+      openingHoursSpecification: [
+        { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "10:00", closes: "12:00" },
+        { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "13:00", closes: "17:00" },
+      ],
+    },
+    {
+      "@type": "ItemList",
+      name: "Wijnen van Wijndomein De Boe",
+      itemListElement: wines.map((wn, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "Product",
+          name: wn.name,
+          category: wn.cat,
+          image: new URL(wn.img, siteUrl).href,
+          url: wn.url,
+          brand: { "@type": "Brand", name: site.name },
+          offers: { "@type": "Offer", price: priceNum(wn.price).toFixed(2), priceCurrency: "EUR", availability: "https://schema.org/InStock", url: wn.url },
+        },
+      })),
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -47,10 +90,11 @@ const ogImageAbs = new URL(ogImage, siteUrl).href;
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
-    />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" /></noscript>
+    <link rel="preload" as="image" href="/film/frames/f0001.jpg" fetchpriority="high" />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 
     <ClientRouter />
     <title>{title}</title>
@@ -83,11 +127,34 @@ const ogImageAbs = new URL(ogImage, siteUrl).href;
       // Native scroll + ScrollTrigger-snap (geen Lenis: dat botst met snapping).
       const w = window as any;
       const lock = (on: boolean) => { document.body.classList.toggle("is-locked", on); };
+      let lastFocus: HTMLElement | null = null;
+      const setBgInert = (on: boolean) => {
+        document.querySelectorAll<HTMLElement>("main, footer, .fab, .nav").forEach((el) => { on ? el.setAttribute("inert", "") : el.removeAttribute("inert"); });
+      };
+      function trapTab(e: KeyboardEvent, box: HTMLElement | null) {
+        if (!box) return;
+        const f = Array.from(box.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])')).filter((el) => el.offsetParent !== null);
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
 
       // ── Visit modal ──
       const ov = () => document.querySelector<HTMLElement>("[data-reserve-overlay]");
-      function openReserve() { const o = ov(); if (!o) return; o.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add("is-open"))); lock(true); }
-      function closeReserve() { const o = ov(); if (!o) return; o.classList.remove("is-open"); lock(false); setTimeout(() => { const x = ov(); if (x && !x.classList.contains("is-open")) x.hidden = true; }, 240); }
+      function openReserve() {
+        const o = ov(); if (!o) return;
+        lastFocus = document.activeElement as HTMLElement;
+        o.hidden = false;
+        requestAnimationFrame(() => requestAnimationFrame(() => { o.classList.add("is-open"); setBgInert(true); o.querySelector<HTMLElement>(".rc-close")?.focus(); }));
+        lock(true);
+      }
+      function closeReserve() {
+        const o = ov(); if (!o) return;
+        o.classList.remove("is-open"); lock(false); setBgInert(false);
+        setTimeout(() => { const x = ov(); if (x && !x.classList.contains("is-open")) x.hidden = true; }, 240);
+        lastFocus?.focus?.(); lastFocus = null;
+      }
 
       // ── Mobiele nav ──
       function toggleNav(force?: boolean) {
@@ -95,9 +162,12 @@ const ogImageAbs = new URL(ogImage, siteUrl).href;
         if (!sheet) return;
         const open = force ?? !sheet.classList.contains("is-open");
         sheet.classList.toggle("is-open", open);
+        (sheet as any).inert = !open;
         document.body.classList.toggle("nav-open", open);
         document.querySelectorAll<HTMLButtonElement>("[data-nav-toggle]").forEach((b) => b.setAttribute("aria-expanded", String(open)));
+        setBgInert(open);
         lock(open);
+        if (open) requestAnimationFrame(() => sheet.querySelector<HTMLElement>("a")?.focus());
       }
 
       const onScroll = () => {
@@ -105,13 +175,11 @@ const ogImageAbs = new URL(ogImage, siteUrl).href;
         if (nav) nav.classList.toggle("is-scrolled", window.scrollY > 60);
       };
 
-      // ── Soepel ankerscrollen (één lange pagina) ──
+      // ── Soepel ankerscrollen (één lange pagina); scroll-margin-top vangt de nav-pill op ──
       function scrollToHash(hash: string) {
-        if (hash === "#top") { w.__lenis ? w.__lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+        if (hash === "#top") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
         const target = document.querySelector<HTMLElement>(hash);
-        if (!target) return;
-        if (w.__lenis) w.__lenis.scrollTo(target, { offset: -70 });
-        else target.scrollIntoView({ behavior: "smooth" });
+        if (target) target.scrollIntoView({ behavior: "smooth" });
       }
 
       if (!w.__deboeWin) {
@@ -123,6 +191,9 @@ const ogImageAbs = new URL(ogImage, siteUrl).href;
           if (e.key === "Escape") {
             const o = ov(); if (o && o.classList.contains("is-open")) closeReserve();
             const s = document.querySelector<HTMLElement>("[data-navsheet]"); if (s && s.classList.contains("is-open")) toggleNav(false);
+          } else if (e.key === "Tab") {
+            const o = ov(); if (o && o.classList.contains("is-open")) { trapTab(e, o.querySelector<HTMLElement>(".rc-modal")); return; }
+            const s = document.querySelector<HTMLElement>("[data-navsheet]"); if (s && s.classList.contains("is-open")) trapTab(e, s);
           }
         });
         document.addEventListener("click", (e) => {
@@ -264,11 +335,15 @@ const ogImageAbs = new URL(ogImage, siteUrl).href;
             count = m.count;
             const pad = (n: number) => String(n).padStart(4, "0");
             let loaded = 0;
+            let built = false;
+            const ready = Math.min(count, 24);
             const done = () => {
               loaded++;
-              if (barEl) barEl.style.transform = "scaleX(" + loaded / count + ")";
-              if (pctEl) pctEl.textContent = Math.round((loaded / count) * 100) + "%";
-              if (loaded >= count) { if (loaderEl) loaderEl.classList.add("is-done"); build(); }
+              const frac = Math.min(1, loaded / ready);
+              if (barEl) barEl.style.transform = "scaleX(" + frac + ")";
+              if (pctEl) pctEl.textContent = Math.round(frac * 100) + "%";
+              // start zodra de eerste ~24 frames binnen zijn; de rest laadt door op de achtergrond
+              if (!built && loaded >= ready) { built = true; if (loaderEl) loaderEl.classList.add("is-done"); build(); }
             };
             for (let i = 1; i <= count; i++) {
               const img = new Image();
