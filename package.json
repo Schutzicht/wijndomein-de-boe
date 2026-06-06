@@ -1,0 +1,31 @@
+{
+  "name": "demo-wijndomein-de-boe",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev --port 4346",
+    "build": "astro build",
+    "preview": "astro preview --port 4346",
+    "astro": "astro",
+    "generate:images": "node scripts/generate-images.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "@vercel/analytics": "^2.0.1",
+    "astro": "^6.1.10",
+    "gsap": "^3.15.0",
+    "lenis": "^1.1.18",
+    "tailwindcss": "^4.2.4"
+  },
+  "overrides": {
+    "vite": "^7.3.2"
+  },
+  "devDependencies": {
+    "@google/genai": "^2.7.0",
+    "dotenv": "^17.4.2",
+    "ffmpeg-static": "^5.3.0"
+  }
+}

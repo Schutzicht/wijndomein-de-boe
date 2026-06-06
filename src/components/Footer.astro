@@ -1,0 +1,71 @@
+---
+import { site, nav } from "../data/site";
+import Icon from "./Icon.astro";
+const year = new Date().getFullYear();
+const marqueeItems = Array.from({ length: 6 });
+---
+
+<footer class="foot" id="contact">
+  <div class="foot__in">
+    <!-- Marquee -->
+    <div class="marquee py-10 md:py-14 border-y border-[color:var(--color-stroke)]" data-marquee aria-hidden="true">
+      <div class="marquee__row">{marqueeItems.map(() => <span>Wijn van zee en zon</span>)}</div>
+      <div class="marquee__row">{marqueeItems.map(() => <span>Wijn van zee en zon</span>)}</div>
+    </div>
+
+    <!-- Grote CTA -->
+    <div class="container text-center py-16 md:py-24">
+      <p class="eyebrow eyebrow--line justify-center" data-anim="up">Tot ziens op Walcheren</p>
+      <h2 class="display-2 mt-5" data-anim="up">Proef de <span class="accent-text">wijngaard</span></h2>
+      <p class="lede mx-auto mt-5 max-w-[48ch]" data-anim="up">
+        Reserveer een rondleiding met proeverij, of bestel de wijnen voor thuis. Geopend op zaterdag en op afspraak.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3 mt-9" data-anim="up">
+        <button type="button" class="btn btn-wine btn-ring" data-reserve-open>Plan je bezoek <Icon name="arrowUpRight" size={14} stroke={1.8} /></button>
+        <a href={site.webshop} target="_blank" rel="noopener" class="btn btn-outline">Naar de webshop</a>
+      </div>
+    </div>
+
+    <!-- Footer bar -->
+    <div class="container pb-10">
+      <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] border-t border-[color:var(--color-stroke)] pt-10">
+        <div>
+          <img src="/echt/logo.png" alt="Wijndomein De Boe" style="height:66px;width:auto" />
+          <p class="text-sm text-[color:var(--color-muted)] mt-4 max-w-[34ch]">
+            Een jonge wijngaard op het zilte terroir van Walcheren. Wijn van zee en zon.
+          </p>
+          <div class="inline-flex items-center gap-2.5 mt-5 text-sm text-[color:var(--color-muted)]">
+            <span class="foot__dot" data-open-status-dot></span>
+            <span data-open-status data-open-status-text>Geopend op zaterdag</span>
+          </div>
+        </div>
+        <div>
+          <div class="text-[0.68rem] uppercase tracking-[0.2em] text-[color:var(--color-muted)] mb-4">Bezoek</div>
+          <address class="not-italic text-sm leading-relaxed">{site.address.street}<br />{site.address.zip} {site.address.city}</address>
+          <a href={site.maps} target="_blank" rel="noopener" class="link-line text-sm mt-3"><Icon name="pin" size={14} /> Route</a>
+        </div>
+        <div>
+          <div class="text-[0.68rem] uppercase tracking-[0.2em] text-[color:var(--color-muted)] mb-4">Contact</div>
+          <ul class="space-y-2 text-sm">
+            <li><a href={site.phoneHref} class="link-line">{site.phone}</a></li>
+            <li><a href={`mailto:${site.email}`} class="link-line">{site.email}</a></li>
+          </ul>
+          <div class="flex gap-3 mt-4">
+            <a href={site.social.instagram} class="foot__social" aria-label="Instagram" target="_blank" rel="noopener"><Icon name="instagram" size={17} /></a>
+            <a href={site.social.facebook} class="foot__social" aria-label="Facebook" target="_blank" rel="noopener"><Icon name="facebook" size={17} /></a>
+          </div>
+        </div>
+        <div>
+          <div class="text-[0.68rem] uppercase tracking-[0.2em] text-[color:var(--color-muted)] mb-4">Menu</div>
+          <nav class="space-y-2 text-sm" aria-label="Footermenu">
+            {nav.slice(1).map((item) => <div><a href={item.href} class="link-line">{item.label}</a></div>)}
+          </nav>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[color:var(--color-stroke)] flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-xs text-[color:var(--color-muted)]">
+        <div>&copy; {year} {site.name}, {site.city}.</div>
+        <div>Demo door <a href="https://agensea.nl" target="_blank" rel="noopener" class="link-line">Agensea</a></div>
+      </div>
+    </div>
+  </div>
+</footer>

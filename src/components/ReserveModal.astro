@@ -1,0 +1,57 @@
+---
+import { site } from "../data/site";
+import Icon from "./Icon.astro";
+---
+
+<div class="rc-overlay" data-reserve-overlay role="dialog" aria-modal="true" aria-labelledby="rc-title" hidden>
+  <div class="rc-modal">
+    <button type="button" class="rc-close" aria-label="Sluit venster" data-reserve-close>
+      <Icon name="close" size={20} stroke={1.8} />
+    </button>
+
+    <span class="rc-eyebrow">Plan je bezoek</span>
+    <h2 id="rc-title" class="font-display text-[2.5rem] mt-2 leading-none">Kom langs op het domein</h2>
+    <p class="text-sm text-[color:var(--color-muted)] mt-3 leading-relaxed font-light">
+      Een rondleiding met proeverij, een middag op het terras of een fles voor thuis. Laat het ons weten, we denken graag mee.
+    </p>
+
+    <div class="grid gap-2.5 mt-6">
+      <a href={`mailto:${site.email}?subject=Bezoek%20Wijndomein%20De%20Boe`} class="rc-channel rc-channel--accent">
+        <span class="rc-channel__ic"><Icon name="mail" size={20} /></span>
+        <span class="flex-1">
+          <span class="rc-channel__t block">Reserveer een rondleiding</span>
+          <span class="rc-channel__s">{site.email}</span>
+        </span>
+        <Icon name="arrowUpRight" size={18} class="text-[color:var(--color-muted)]" />
+      </a>
+      <a href={site.phoneHref} class="rc-channel">
+        <span class="rc-channel__ic"><Icon name="phone" size={18} /></span>
+        <span class="flex-1">
+          <span class="rc-channel__t block">Bel ons</span>
+          <span class="rc-channel__s">{site.phone}</span>
+        </span>
+      </a>
+      <a href={site.webshop} target="_blank" rel="noopener" class="rc-channel">
+        <span class="rc-channel__ic"><Icon name="bottle" size={18} /></span>
+        <span class="flex-1">
+          <span class="rc-channel__t block">Bestel in de webshop</span>
+          <span class="rc-channel__s">De wijnen voor thuisbezorging</span>
+        </span>
+        <Icon name="arrowUpRight" size={18} class="text-[color:var(--color-muted)]" />
+      </a>
+      <a href={site.maps} target="_blank" rel="noopener" class="rc-channel">
+        <span class="rc-channel__ic"><Icon name="pin" size={18} /></span>
+        <span class="flex-1">
+          <span class="rc-channel__t block">Route naar het domein</span>
+          <span class="rc-channel__s">{site.address.street}, {site.address.city}</span>
+        </span>
+        <Icon name="arrowUpRight" size={18} class="text-[color:var(--color-muted)]" />
+      </a>
+    </div>
+
+    <p class="text-[0.78rem] text-[color:var(--color-muted)] mt-4 leading-relaxed font-light">
+      Geopend op zaterdag van 10:00 tot 12:00 en van 13:00 tot 17:00. Rondleidingen het hele jaar op afspraak.
+      <a href="/bezoek" class="link-line" data-reserve-close>Bekijk de mogelijkheden</a>.
+    </p>
+  </div>
+</div>

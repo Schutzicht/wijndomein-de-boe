@@ -1,0 +1,352 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { site, wines, wineCats, experiences, features, stats, reviews, galleryImages } from "../data/site";
+
+const typeLabel: Record<string, string> = { wit: "Wit", rood: "Rood", mousserend: "Mousserend", dessert: "Dessert" };
+
+// Headers per etappe (snap-haltes). De film heeft 8 etappes (9 haltes); halte 0 = intro, halte 8 = CTA.
+const caps = [
+  { num: "01", title: "De wijngaard", text: "Geworteld in zee en zon op het zilte Walcheren.", at: "0.125" },
+  { num: "02", title: "De druif", text: "Met de hand geplukt, op het rijpste moment.", at: "0.25" },
+  { num: "03", title: "De oogst", text: "Vers van de rank, de kist in.", at: "0.375" },
+  { num: "04", title: "De wijnmakerij", text: "In de most begint de wijn aan zijn reis.", at: "0.5" },
+  { num: "05", title: "De rijping", text: "Geduld in de stille koelte van de kelder.", at: "0.625" },
+  { num: "06", title: "De botteling", text: "Fles voor fles, met zorg gevuld.", at: "0.75" },
+  { num: "07", title: "De fles", text: "Zon, zee en zilte grond, gevangen in glas.", at: "0.875" },
+];
+---
+
+<Base>
+  <!-- ══════════════════════════════════════════════════════════
+       DE FILM — scroll-scrubbed reis van de druif tot de wijn
+  ══════════════════════════════════════════════════════════ -->
+  <section class="film" id="top" data-film aria-label="Van de druif tot de wijn">
+    <div class="film__sticky">
+      <canvas class="film__canvas"></canvas>
+      <div class="film__scrim" aria-hidden="true"></div>
+
+      <!-- Openingstitel -->
+      <div class="film__intro">
+        <div>
+          <p class="film__intro-eyebrow">Walcheren &middot; Zeeland</p>
+          <h1 class="film__intro-title">Wijndomein De&nbsp;Boe</h1>
+          <p class="film__intro-sub">Wijn van zee en zon</p>
+        </div>
+      </div>
+
+      <!-- Headers per etappe -->
+      <div class="film__captions">
+        {caps.map((c) => (
+          <div class="film__cap" data-at={c.at}>
+            <span class="film__cap-num">{c.num}</span>
+            <h2 class="film__cap-title">{c.title}</h2>
+            <p class="film__cap-text">{c.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Etappe-indicator -->
+      <div class="film__rail" aria-hidden="true">
+        {Array.from({ length: 9 }).map(() => <span class="film__dot"></span>)}
+      </div>
+
+      <!-- Slot: product + CTA -->
+      <div class="film__cta">
+        <div class="film__cta-inner">
+          <p class="film__cta-eyebrow">Wijndomein De Boe</p>
+          <h2 class="film__cta-title">Proef de reis</h2>
+          <p class="film__cta-text">Van de eerste rank in de zeewind tot het glas in je hand. Ontdek de wijnen van zee en zon.</p>
+          <div class="film__cta-actions">
+            <a href="#wijnen" class="btn btn-wine btn-ring">Ontdek de wijnen <Icon name="arrow" size={14} stroke={1.8} /></a>
+            <button type="button" class="btn btn-ghost" data-reserve-open>Plan je bezoek</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Voortgang + hint -->
+      <div class="film__progress" aria-hidden="true"><span></span></div>
+      <div class="film__hint" aria-hidden="true"><span>Scroll om te proeven</span><Icon name="arrowDown" size={14} stroke={1.8} /></div>
+
+      <!-- Preloader -->
+      <div class="film__loader" data-film-loader>
+        <div class="film__loader-inner">
+          <div class="film__loader-word">De&nbsp;Boe</div>
+          <div class="film__loader-bar"><span></span></div>
+          <div class="film__loader-pct">0%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statische fallback (geen JS / reduced motion) -->
+  <section class="film-fallback">
+    <div class="cinema">
+      <div class="cinema__bg" aria-hidden="true"><img src="/film/keyframes/k0_aerial.png" alt="Wijngaard van De Boe aan de Zeeuwse kust" /></div>
+      <div class="cinema__veil"></div>
+      <div class="cinema__body">
+        <div class="container text-center">
+          <p class="eyebrow eyebrow--line justify-center" style="color: rgba(255,253,248,0.85)">Walcheren &middot; Zeeland</p>
+          <h1 class="display-2 mt-4" style="color:#fffdf8">Wijndomein De Boe</h1>
+          <p class="lede mt-4 mx-auto max-w-[48ch]" style="color: rgba(255,253,248,0.92)">Een jonge wijngaard op het zilte terroir van Walcheren. Wijn van zee en zon.</p>
+          <div class="flex flex-wrap justify-center gap-3 mt-8">
+            <a href="#wijnen" class="btn btn-wine btn-ring">Ontdek de wijnen</a>
+            <button type="button" class="btn btn-ghost" data-reserve-open>Plan je bezoek</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Intro-statement ════════════════════════════════════ -->
+  <section class="section" id="domein">
+    <div class="container text-center">
+      <p class="eyebrow eyebrow--line justify-center" data-anim="up">Wijngaard aan de Zeeuwse kust</p>
+      <h2 class="statement mx-auto mt-7 text-center" style="max-width: 20ch;">
+        <span data-anim="blur" class="block">Wijn die <span class="accent-text">de zee</span></span>
+        <span data-anim="blur" class="block">in zich draagt.</span>
+      </h2>
+      <p class="lede mx-auto mt-6 max-w-[52ch]" data-anim="up">
+        Badend in de volle zon, gevormd door de zeewind en gevoed door kalkrijke gronden van zeeklei en zeezand. Dat is het zilte terroir van Wijndomein De Boe.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ De naam ════════════════════════════════════════════ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="split split--wide-text" data-stagger>
+        <div>
+          <p class="eyebrow eyebrow--line" data-anim="up">Waar komt De Boe vandaan?</p>
+          <h2 class="sec-title mt-5" data-anim="up">Het oude <span class="accent-text">tuinmanshuisje</span></h2>
+          <p class="lede mt-6" data-anim="up">
+            Al halverwege de 17e eeuw wordt de plek De Boe genoemd. In de middeleeuwen stond het woord voor alles wat van hout was, en nog altijd betekent boe simpelweg houten schuur.
+          </p>
+          <p class="mt-4 text-[color:var(--color-muted)] leading-relaxed" data-anim="up">
+            Onze boe was vroeger het tuinmanshuisje van Huis der Boede. De zes hectare land om de boerderij maakte ooit deel uit van de Franse en Engelse tuinen van het landgoed. Op die grond staan nu onze ranken.
+          </p>
+        </div>
+        <div data-anim="up">
+          <div class="frame frame--tall frame-hover"><img src="/photos/generated/landgoed-boe.png" alt="Het oude tuinmanshuisje De Boe met klimplanten" loading="lazy" /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Terroir ════════════════════════════════════════════ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="split split--wide-img" data-stagger>
+        <div class="order-2 md:order-1" data-anim="up">
+          <div class="frame frame--wide frame-hover"><img src="/photos/generated/terroir-bodem.png" alt="Kalkrijke, schelprijke bodem onder de ranken" loading="lazy" /></div>
+        </div>
+        <div class="order-1 md:order-2">
+          <p class="eyebrow eyebrow--line" data-anim="up">Het zilte terroir</p>
+          <h2 class="sec-title mt-5" data-anim="up">Zeeklei, zand en <span class="accent-text">schelpen</span></h2>
+          <p class="lede mt-6" data-anim="up">
+            Een deel van de wijngaard ligt op een oude kreekrug, zavel op zand, die overgaat in jonge zeeklei. Zand brengt elegantie en aroma, klei geeft body en kleur.
+          </p>
+          <p class="mt-4 text-[color:var(--color-muted)] leading-relaxed" data-anim="up">
+            Beide gronden zijn zeer kalkrijk en bevatten al op minder dan een meter diepte een hoop schelpen. Die mineraliteit proef je terug in het glas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Pijlers ════════════════════════════════════════════ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="feature-grid" data-stagger>
+        {features.map((f) => (
+          <div class="feature" data-anim="up">
+            <span class="feature__icon"><Icon name={f.icon} size={26} stroke={1.5} /></span>
+            <h3>{f.title}</h3>
+            <p>{f.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ De wijnboer ════════════════════════════════════════ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="split split--wide-img" data-stagger>
+        <div class="order-2 md:order-1" data-anim="up">
+          <div class="frame frame--square frame-hover"><img src="/echt/wijnboer.jpg" alt="Wijnboer Bruno Suter aan het werk in de wijngaard" loading="lazy" /></div>
+        </div>
+        <div class="order-1 md:order-2">
+          <p class="eyebrow eyebrow--line" data-anim="up">De wijnboer</p>
+          <h2 class="sec-title mt-5" data-anim="up">Bruno Suter</h2>
+          <p class="lede mt-6" data-anim="up">
+            Bruno studeerde plantenwetenschappen in Wageningen en viticultuur en oenologie in Bordeaux, en werkte bij wijnhuizen in Bordeaux, de Elzas, de Bourgogne en Engeland.
+          </p>
+          <span class="text-[color:var(--color-accent-a)] inline-flex mt-7" data-anim="up"><Icon name="quote" size={30} stroke={1.4} /></span>
+          <blockquote class="quote-block mt-3" data-anim="up">
+            Mooie wijnen komen van de <span class="accent-text">mooie plekken</span> in de wereld.
+          </blockquote>
+          <p class="mt-4 text-[color:var(--color-muted)] leading-relaxed" data-anim="up">
+            Met al die kennis koos hij voor pionieren op eigen bodem, hier aan de Zeeuwse kust. Walcheren, vindt hij, is zo'n mooie plek.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Galerij (parallax) ════════════════════════════════ -->
+  <section class="section overflow-hidden">
+    <div class="container text-center mb-2">
+      <p class="eyebrow eyebrow--line justify-center" data-anim="up">In beeld</p>
+      <h2 class="sec-title mt-5" data-anim="up">De wijngaard &amp; de <span class="accent-text">zee</span></h2>
+    </div>
+    <div class="gallery-cols container-wide">
+      <div class="gallery-col" data-parallax="-7">
+        <div class="gallery-item"><img src="/photos/generated/wijngaard-rij.png" alt="Rij wijnranken richting de zee" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/photos/generated/oogst-mand.png" alt="Mand met versgeoogste druiven" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/photos/generated/proeverij-tafel.png" alt="Proeverij op het terras" loading="lazy" /></div>
+      </div>
+      <div class="gallery-col gallery-col--b" data-parallax="7">
+        <div class="gallery-item"><img src="/echt/glazen.jpg" alt="Wijnglazen van De Boe op tafel tijdens een proeverij" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/film/keyframes/k2_cluster.png" alt="Rijpe druiventros in tegenlicht" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/photos/generated/terroir-bodem.png" alt="Schelprijke bodem" loading="lazy" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ De wijnen ══════════════════════════════════════════ -->
+  <section class="section-sm" id="wijnen">
+    <div class="container">
+      <div class="grid lg:grid-cols-[0.8fr_1.2fr] gap-10 lg:gap-16 items-start">
+        <!-- Echte fles, meescrollend -->
+        <div class="lg:sticky lg:top-28 text-center" data-anim="up">
+          <img src="/echt/fles-moestuin.png" alt="Wijndomein De Boe Moestuin, Auxerrois en Chardonnay" class="mx-auto h-[clamp(17rem,38vw,30rem)] w-auto object-contain" style="filter: drop-shadow(0 30px 45px rgba(44,34,24,0.22));" />
+          <div class="mt-5">
+            <div class="font-display text-2xl">Moestuin</div>
+            <div class="text-sm text-[color:var(--color-muted)] mt-1">Auxerrois &amp; Chardonnay, onze klassieker</div>
+          </div>
+        </div>
+        <!-- Lijst -->
+        <div>
+          <p class="eyebrow eyebrow--line" data-anim="up">Jaargang 2024 &amp; 2025</p>
+          <h2 class="sec-title mt-5" data-anim="up">Elf wijnen, <span class="accent-text">één terroir</span></h2>
+          <p class="lede mt-4 max-w-[52ch]" data-anim="up">
+            Elke wijn draagt een naam die teruggrijpt op het landgoed en de Zeeuwse geschiedenis. Van stil en wit tot mousserend volgens traditionele methode.
+          </p>
+          <div class="flex flex-wrap items-center justify-between gap-4 mt-8 mb-2">
+            <div class="seg" role="group" aria-label="Filter op type" data-anim="up">
+              {wineCats.map((c, i) => (
+                <button type="button" class="seg__btn" data-winefilter={c.key} aria-pressed={i === 0 ? "true" : "false"}>{c.label}</button>
+              ))}
+            </div>
+            <a href={site.webshop} target="_blank" rel="noopener" class="link-line text-sm" data-anim="up">Webshop <Icon name="arrowUpRight" size={15} /></a>
+          </div>
+          <div class="winelist" data-stagger>
+            {wines.map((wn) => (
+              <div class="wine-item" data-wine-item data-cat={wn.cat} data-anim="up">
+                <span class={`wine-item__swatch swatch-${wn.swatch}`} aria-hidden="true"></span>
+                <div>
+                  <div class="wine-item__name">{wn.name}</div>
+                  <div class="wine-item__meta">
+                    <span>{typeLabel[wn.cat]}</span>
+                    <span class="dotsep">{wn.grape}</span>
+                    <span class="dotsep">{wn.year}</span>
+                  </div>
+                  <p class="wine-item__note">{wn.note}</p>
+                </div>
+                <div class="wine-item__price"><span class="cur">€</span>{wn.price}</div>
+              </div>
+            ))}
+          </div>
+          <p class="text-[0.82rem] text-[color:var(--color-muted)] mt-8 leading-relaxed">
+            Prijzen per fles, zoals in onze eigen webshop. Niet elke jaargang is doorlopend beschikbaar.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Bezoek ═════════════════════════════════════════════ -->
+  <section class="section-sm" id="bezoek">
+    <div class="container">
+      <div class="text-center mb-10">
+        <p class="eyebrow eyebrow--line justify-center" data-anim="up">Kom langs op het domein</p>
+        <h2 class="sec-title mt-5" data-anim="up">Een middag op de <span class="accent-text">wijngaard</span></h2>
+      </div>
+      <div class="grid gap-5 md:grid-cols-3" data-stagger>
+        {experiences.map((e, i) => (
+          <div class={`course-card${i === 0 ? " course-card--featured" : ""}`} data-anim="up">
+            {i === 0 && <span class="course-card__badge">Geliefd</span>}
+            <span class="text-[color:var(--color-accent-a)]"><Icon name={e.icon} size={30} stroke={1.4} /></span>
+            <div class="course-card__label mt-4">{e.kicker}</div>
+            <h3 class="font-display text-[1.9rem] leading-tight mt-1">{e.title}</h3>
+            <div class="course-card__price">{e.price}</div>
+            <p class="text-[0.95rem] text-[color:var(--color-muted)] leading-relaxed mt-3 flex-1">{e.body}</p>
+            <div class="text-[0.78rem] text-[color:var(--color-muted)] mt-5 pt-4 border-t border-[color:var(--color-stroke)]">{e.meta}</div>
+          </div>
+        ))}
+      </div>
+      <div class="flex flex-wrap gap-3 mt-9" data-anim="up">
+        <button type="button" class="btn btn-wine btn-ring" data-reserve-open>Reserveer een rondleiding <Icon name="arrowUpRight" size={14} stroke={1.8} /></button>
+        <a href={`mailto:${site.email}?subject=Cadeaubon%20rondleiding`} class="btn btn-outline"><Icon name="gift" size={15} stroke={1.6} /> Cadeaubon &euro;20</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Kerncijfers ════════════════════════════════════════ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="stat-row border-t border-[color:var(--color-stroke)] pt-12" data-stagger>
+        {stats.map((s) => (
+          <div data-anim="up">
+            <div class="stat__n accent-text">{s.n}</div>
+            <div class="stat__l">{s.l}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Reviews ════════════════════════════════════════════ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="mb-9 text-center" data-anim="up">
+        <p class="eyebrow eyebrow--line justify-center">Gasten aan het woord</p>
+        <h2 class="sec-title mt-5">Geproefd en <span class="accent-text">geliefd</span></h2>
+      </div>
+      <div class="reviews" data-stagger>
+        {reviews.map((r) => (
+          <div class="review" data-anim="up">
+            <div class="review__stars">{Array.from({ length: 5 }).map(() => <Icon name="star" size={15} stroke={0} class="fill-current" />)}</div>
+            <p class="review__q">&ldquo;{r.q}&rdquo;</p>
+            <div class="review__foot">
+              <div><div class="review__name">{r.name}</div><div class="text-[0.74rem] text-[color:var(--color-muted)]">{r.place}</div></div>
+              <div class="review__src">{r.src}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p class="text-[0.78rem] text-[color:var(--color-muted)] mt-7 text-center">Illustratieve gastreacties voor deze demo.</p>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      function setup() {
+        const btns = document.querySelectorAll("[data-winefilter]");
+        if (!btns.length) return;
+        const items = document.querySelectorAll("[data-wine-item]");
+        btns.forEach((btn) => {
+          if (btn.__bound) return;
+          btn.__bound = true;
+          btn.addEventListener("click", () => {
+            const key = btn.getAttribute("data-winefilter");
+            btns.forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false"));
+            items.forEach((it) => { it.hidden = !(key === "alle" || it.getAttribute("data-cat") === key); });
+          });
+        });
+      }
+      if (!window.__wineListener) { window.__wineListener = true; document.addEventListener("astro:page-load", setup); }
+    })();
+  </script>
+</Base>

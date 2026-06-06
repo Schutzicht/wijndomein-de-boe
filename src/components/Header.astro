@@ -1,0 +1,43 @@
+---
+import { nav } from "../data/site";
+import Icon from "./Icon.astro";
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isCurrent = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
+---
+
+<nav class="nav" data-nav aria-label="Hoofdmenu">
+  <div class="nav__pill">
+    <a href="#top" class="nav__logo" aria-label="Wijndomein De Boe, naar boven">
+      <img src="/echt/logo.png" alt="Wijndomein De Boe" class="nav__logo-img" />
+    </a>
+    <span class="nav__divider"></span>
+    <div class="nav__links inline-flex items-center">
+      {nav.slice(1).map((item) => (
+        <a href={item.href} class="nav__link" aria-current={isCurrent(item.href) ? "page" : undefined}>{item.label}</a>
+      ))}
+    </div>
+    <span class="nav__divider"></span>
+    <button type="button" class="nav__cta" data-reserve-open>
+      Plan je bezoek
+      <Icon name="arrowUpRight" size={13} stroke={1.8} />
+    </button>
+    <button type="button" class="nav__toggle" data-nav-toggle aria-label="Open menu" aria-expanded="false">
+      <Icon name="menu" size={20} stroke={1.8} />
+    </button>
+  </div>
+</nav>
+
+<aside class="navsheet" data-navsheet aria-label="Mobiel menu">
+  <button type="button" class="absolute top-6 right-6 nav__toggle" data-nav-toggle aria-label="Sluit menu">
+    <Icon name="close" size={22} stroke={1.8} />
+  </button>
+  {nav.map((item, i) => (
+    <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
+      {item.label}
+      <span>{String(i + 1).padStart(2, "0")}</span>
+    </a>
+  ))}
+  <button type="button" class="btn btn-wine btn-ring mt-10 self-start" data-reserve-open>
+    Plan je bezoek <Icon name="arrowUpRight" size={14} stroke={1.8} />
+  </button>
+</aside>

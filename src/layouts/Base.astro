@@ -1,0 +1,313 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import ReserveModal from "../components/ReserveModal.astro";
+import Icon from "../components/Icon.astro";
+import Analytics from "@vercel/analytics/astro";
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+const {
+  title = "Wijndomein De Boe | Wijngaard aan de Zeeuwse kust op Walcheren",
+  description = "Wijndomein De Boe is een jonge wijngaard op het zilte terroir van Walcheren. Beleef de reis van de druif tot de wijn, ontdek onze wijnen van zee en zon en plan je bezoek.",
+  ogImage = "/film/keyframes/k7_bottle.png",
+} = Astro.props;
+const siteUrl = Astro.site ?? "https://demo-wijndomein-de-boe.vercel.app";
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageAbs = new URL(ogImage, siteUrl).href;
+---
+
+<!doctype html>
+<html lang="nl" class="js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f7f2e8" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Wijndomein De Boe" />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageAbs} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:image" content={ogImageAbs} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+    />
+
+    <ClientRouter />
+    <title>{title}</title>
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <slot />
+    </main>
+
+    <Footer />
+    <ReserveModal />
+
+    <button type="button" class="fab" data-reserve-open aria-label="Plan je bezoek">
+      <span>Plan je bezoek</span>
+      <Icon name="arrowUpRight" size={14} stroke={1.8} />
+    </button>
+
+    <Analytics />
+
+    <script>
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+      gsap.registerPlugin(ScrollTrigger);
+
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.documentElement.classList.toggle("reduced", reduced);
+
+      // Native scroll + ScrollTrigger-snap (geen Lenis: dat botst met snapping).
+      const w = window as any;
+      const lock = (on: boolean) => { document.body.classList.toggle("is-locked", on); };
+
+      // ── Visit modal ──
+      const ov = () => document.querySelector<HTMLElement>("[data-reserve-overlay]");
+      function openReserve() { const o = ov(); if (!o) return; o.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add("is-open"))); lock(true); }
+      function closeReserve() { const o = ov(); if (!o) return; o.classList.remove("is-open"); lock(false); setTimeout(() => { const x = ov(); if (x && !x.classList.contains("is-open")) x.hidden = true; }, 240); }
+
+      // ── Mobiele nav ──
+      function toggleNav(force?: boolean) {
+        const sheet = document.querySelector<HTMLElement>("[data-navsheet]");
+        if (!sheet) return;
+        const open = force ?? !sheet.classList.contains("is-open");
+        sheet.classList.toggle("is-open", open);
+        document.body.classList.toggle("nav-open", open);
+        document.querySelectorAll<HTMLButtonElement>("[data-nav-toggle]").forEach((b) => b.setAttribute("aria-expanded", String(open)));
+        lock(open);
+      }
+
+      const onScroll = () => {
+        const nav = document.querySelector<HTMLElement>("[data-nav]");
+        if (nav) nav.classList.toggle("is-scrolled", window.scrollY > 60);
+      };
+
+      // ── Soepel ankerscrollen (één lange pagina) ──
+      function scrollToHash(hash: string) {
+        if (hash === "#top") { w.__lenis ? w.__lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+        const target = document.querySelector<HTMLElement>(hash);
+        if (!target) return;
+        if (w.__lenis) w.__lenis.scrollTo(target, { offset: -70 });
+        else target.scrollIntoView({ behavior: "smooth" });
+      }
+
+      if (!w.__deboeWin) {
+        w.__deboeWin = true;
+        window.addEventListener("scroll", onScroll, { passive: true });
+        let rt: number | undefined;
+        window.addEventListener("resize", () => { window.clearTimeout(rt); rt = window.setTimeout(() => ScrollTrigger.refresh(), 200); });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            const o = ov(); if (o && o.classList.contains("is-open")) closeReserve();
+            const s = document.querySelector<HTMLElement>("[data-navsheet]"); if (s && s.classList.contains("is-open")) toggleNav(false);
+          }
+        });
+        document.addEventListener("click", (e) => {
+          const o = ov(); if (o && e.target === o) closeReserve();
+          const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+          if (link) {
+            const hash = link.getAttribute("href") || "";
+            if (hash.length > 1) { e.preventDefault(); scrollToHash(hash); }
+          }
+        });
+      }
+
+      // ── Scroll reveals + parallax + marquee ──
+      function setupAnims() {
+        gsap.utils.toArray<HTMLElement>("[data-anim]").forEach((el) => {
+          const y = el.getAttribute("data-anim") === "up" ? 34 : 0;
+          const blur = el.getAttribute("data-anim") === "blur";
+          gsap.to(el, {
+            opacity: 1, y: 0, filter: blur ? "blur(0px)" : "none", duration: 1, ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          });
+          if (y) gsap.set(el, { y });
+        });
+        gsap.utils.toArray<HTMLElement>("[data-stagger]").forEach((group) => {
+          const kids = group.querySelectorAll<HTMLElement>("[data-anim]");
+          ScrollTrigger.create({
+            trigger: group, start: "top 86%", once: true,
+            onEnter: () => gsap.to(kids, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out", stagger: 0.08 }),
+          });
+        });
+        gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
+          const amt = parseFloat(el.getAttribute("data-parallax") || "12");
+          gsap.fromTo(el, { yPercent: -amt }, { yPercent: amt, ease: "none", scrollTrigger: { trigger: el.parentElement || el, start: "top bottom", end: "bottom top", scrub: true } });
+        });
+        gsap.utils.toArray<HTMLElement>("[data-marquee]").forEach((m) => {
+          if (m.querySelector<HTMLElement>(".marquee__row")) gsap.to(m.querySelectorAll(".marquee__row"), { xPercent: -100, repeat: -1, duration: 28, ease: "none" });
+        });
+      }
+
+      // ── DE FILM: scroll-scrubbed cinematic sequence ──
+      function setupFilm() {
+        const film = document.querySelector<HTMLElement>("[data-film]");
+        if (!film) return;
+        const fallback = document.querySelector<HTMLElement>(".film-fallback");
+        const sticky = film.querySelector<HTMLElement>(".film__sticky");
+        const canvas = film.querySelector<HTMLCanvasElement>(".film__canvas");
+        if (!sticky || !canvas) return;
+        const ctx = canvas.getContext("2d");
+
+        // reduced motion of geen frames: toon de statische fallback
+        if (reduced) { film.style.display = "none"; if (fallback) fallback.style.display = "block"; return; }
+
+        film.style.display = "block";
+        if (fallback) fallback.style.display = "none";
+
+        const loaderEl = film.querySelector<HTMLElement>(".film__loader");
+        const barEl = film.querySelector<HTMLElement>(".film__loader-bar span");
+        const pctEl = film.querySelector<HTMLElement>(".film__loader-pct");
+        const progEl = film.querySelector<HTMLElement>(".film__progress span");
+        const hintEl = film.querySelector<HTMLElement>(".film__hint");
+        const introEl = film.querySelector<HTMLElement>(".film__intro");
+        const ctaEl = film.querySelector<HTMLElement>(".film__cta");
+        const caps = Array.from(film.querySelectorAll<HTMLElement>(".film__cap"));
+
+        const images: HTMLImageElement[] = [];
+        const dots = Array.from(film.querySelectorAll<HTMLElement>(".film__dot"));
+        let count = 0;
+        let current = -1;
+        let activeStage = -1;
+        const STAGES = 8;                                   // 8 etappes, 9 haltes (de keyframes)
+        const stops = Array.from({ length: STAGES + 1 }, (_, i) => i / STAGES);
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        let cover = { dw: 0, dh: 0, dx: 0, dy: 0 };
+
+        function computeCover() {
+          const img = images[0];
+          const cw = canvas.width, ch = canvas.height;
+          if (!img || !img.naturalWidth) { cover = { dw: cw, dh: ch, dx: 0, dy: 0 }; return; }
+          const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
+          if (cr > ir) cover = { dw: cw, dh: cw / ir, dx: 0, dy: (ch - cw / ir) / 2 };
+          else cover = { dw: ch * ir, dh: ch, dx: (cw - ch * ir) / 2, dy: 0 };
+        }
+        function draw(idx: number) {
+          const img = images[idx];
+          if (!ctx || !img || !img.naturalWidth) return;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, cover.dx, cover.dy, cover.dw, cover.dh);
+        }
+        function resize() {
+          const cw = sticky.clientWidth, chh = sticky.clientHeight;
+          canvas.width = Math.round(cw * dpr); canvas.height = Math.round(chh * dpr);
+          canvas.style.width = cw + "px"; canvas.style.height = chh + "px";
+          computeCover();
+          if (current >= 0) draw(current); else draw(0);
+        }
+
+        function build() {
+          resize();
+          current = 0; draw(0);
+          // ~0.9 viewport per etappe: een swipe brengt je naar de volgende halte
+          const total = Math.round(window.innerHeight * STAGES * 0.9);
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: film, start: "top top", end: "+=" + total,
+              pin: sticky, anticipatePin: 1, invalidateOnRefresh: true,
+              scrub: 0.4,
+              snap: { snapTo: stops, duration: { min: 0.25, max: 0.6 }, delay: 0.04, ease: "power2.inOut", directional: true },
+              onUpdate: (self) => {
+                const p = self.progress;
+                const idx = Math.min(count - 1, Math.max(0, Math.round(p * (count - 1))));
+                if (idx !== current) { current = idx; draw(idx); }
+                if (progEl) progEl.style.transform = "scaleX(" + p + ")";
+                if (introEl) introEl.style.opacity = String(Math.max(0, 1 - p / 0.05));
+                if (ctaEl) ctaEl.style.opacity = String(Math.max(0, (p - 0.92) / 0.06));
+                if (hintEl) hintEl.style.opacity = p > 0.02 ? "0" : "1";
+                // headers verschijnen op hun etappe-halte
+                caps.forEach((cap) => {
+                  const at = parseFloat(cap.dataset.at || "-1");
+                  const d = Math.abs(p - at);
+                  cap.style.opacity = String(d > 0.062 ? 0 : 1 - d / 0.062);
+                });
+                // etappe-stippen
+                const stage = Math.min(STAGES, Math.max(0, Math.round(p * STAGES)));
+                if (stage !== activeStage) {
+                  activeStage = stage;
+                  dots.forEach((dt, i) => dt.classList.toggle("is-active", i === stage));
+                }
+              },
+            },
+          });
+          window.addEventListener("resize", resize);
+          ScrollTrigger.refresh();
+        }
+
+        fetch("/film/frames/manifest.json")
+          .then((r) => r.json())
+          .then((m) => {
+            count = m.count;
+            const pad = (n: number) => String(n).padStart(4, "0");
+            let loaded = 0;
+            const done = () => {
+              loaded++;
+              if (barEl) barEl.style.transform = "scaleX(" + loaded / count + ")";
+              if (pctEl) pctEl.textContent = Math.round((loaded / count) * 100) + "%";
+              if (loaded >= count) { if (loaderEl) loaderEl.classList.add("is-done"); build(); }
+            };
+            for (let i = 1; i <= count; i++) {
+              const img = new Image();
+              img.decoding = "async";
+              img.onload = () => { (img.decode ? img.decode() : Promise.reject()).then(done).catch(done); };
+              img.onerror = done;
+              img.src = "/film/frames/f" + pad(i) + ".jpg";
+              images[i - 1] = img;
+            }
+          })
+          .catch(() => { if (loaderEl) loaderEl.classList.add("is-done"); if (film) film.style.display = "none"; if (fallback) fallback.style.display = "block"; });
+      }
+
+      // ── Open / gesloten (zaterdag 10-12 en 13-17) ──
+      function openStatus() {
+        const now = new Date();
+        const day = now.getDay();
+        const mins = now.getHours() * 60 + now.getMinutes();
+        const isSat = day === 6;
+        const open = isSat && ((mins >= 600 && mins < 720) || (mins >= 780 && mins < 1020));
+        const label = open ? "Nu geopend" : isSat ? (mins < 600 ? "Vandaag open vanaf 10:00" : mins >= 720 && mins < 780 ? "Open vanaf 13:00" : "Vandaag gesloten") : "Geopend op zaterdag";
+        document.querySelectorAll<HTMLElement>("[data-open-status]").forEach((e) => e.setAttribute("data-open", open ? "ja" : "nee"));
+        document.querySelectorAll<HTMLElement>("[data-open-status-text]").forEach((e) => (e.textContent = label));
+        document.querySelectorAll<HTMLElement>("[data-day]").forEach((li) => li.classList.toggle("is-today", Number((li as HTMLElement).dataset.day) === day));
+      }
+
+      function setupPage() {
+        ScrollTrigger.getAll().forEach((st) => st.kill());
+        onScroll();
+        document.querySelectorAll<HTMLButtonElement>("[data-nav-toggle]").forEach((b) => b.addEventListener("click", () => toggleNav()));
+        document.querySelectorAll<HTMLAnchorElement>("[data-navsheet] a").forEach((a) => a.addEventListener("click", () => toggleNav(false)));
+        document.querySelectorAll<HTMLButtonElement>("[data-reserve-open]").forEach((b) => b.addEventListener("click", openReserve));
+        document.querySelectorAll<HTMLElement>("[data-reserve-close]").forEach((b) => b.addEventListener("click", closeReserve));
+        openStatus();
+        setupAnims();
+        setupFilm();
+        ScrollTrigger.refresh();
+      }
+
+      document.addEventListener("astro:page-load", setupPage);
+    </script>
+  </body>
+</html>
