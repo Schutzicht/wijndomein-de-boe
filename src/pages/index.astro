@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
-import { site, wines, wineCats, experiences, features, stats, reviews, galleryImages } from "../data/site";
+import { site, wines, wineCats, shop, experiences, features, stats, reviews, galleryImages } from "../data/site";
 
 const typeLabel: Record<string, string> = { wit: "Wit", rood: "Rood", mousserend: "Mousserend", dessert: "Dessert" };
 
@@ -194,6 +194,19 @@ const caps = [
     </div>
   </section>
 
+  <!-- ══ Cinematic luchtfoto (echt) ════════════════════════ -->
+  <section class="cinema">
+    <div class="cinema__bg" aria-hidden="true"><img src="/echt/sfeer/promo11.jpg" alt="" data-parallax="8" /></div>
+    <div class="cinema__veil" aria-hidden="true"></div>
+    <div class="cinema__body">
+      <div class="container">
+        <p class="eyebrow eyebrow--line" data-anim="up">De wijngaard van bovenaf</p>
+        <h2 class="cinema__title mt-5" data-anim="up">Vijf hectare aan de <span class="accent-text">Zeeuwse kust</span></h2>
+        <p class="cinema__text mt-4" data-anim="up">Geometrische rijen op een oude kreekrug, omarmd door de zee. Zo ziet ons zilte terroir eruit bij zonsopkomst.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ══ Galerij (parallax) ════════════════════════════════ -->
   <section class="section overflow-hidden">
     <div class="container text-center mb-2">
@@ -202,67 +215,77 @@ const caps = [
     </div>
     <div class="gallery-cols container-wide">
       <div class="gallery-col" data-parallax="-7">
-        <div class="gallery-item"><img src="/photos/generated/wijngaard-rij.png" alt="Rij wijnranken richting de zee" loading="lazy" /></div>
-        <div class="gallery-item"><img src="/photos/generated/oogst-mand.png" alt="Mand met versgeoogste druiven" loading="lazy" /></div>
-        <div class="gallery-item"><img src="/photos/generated/proeverij-tafel.png" alt="Proeverij op het terras" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/sfeer2.jpg" alt="De schuur met eikenhouten vaten bij zonsopkomst" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/oogst.jpg" alt="Met de hand geoogste druiventros" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/drone1.jpg" alt="Luchtfoto van de wijngaardrijen" loading="lazy" /></div>
       </div>
       <div class="gallery-col gallery-col--b" data-parallax="7">
-        <div class="gallery-item"><img src="/echt/glazen.jpg" alt="Wijnglazen van De Boe op tafel tijdens een proeverij" loading="lazy" /></div>
-        <div class="gallery-item"><img src="/film/keyframes/k2_cluster.png" alt="Rijpe druiventros in tegenlicht" loading="lazy" /></div>
-        <div class="gallery-item"><img src="/photos/generated/terroir-bodem.png" alt="Schelprijke bodem" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/promo59.jpg" alt="Een bijeenkomst tussen de ranken op het domein" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/sfeer1.jpg" alt="De gegraveerde De Boe-wijnglazen" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/drone4.jpg" alt="Gouden veld bij het domein in de avondzon" loading="lazy" /></div>
       </div>
     </div>
   </section>
 
-  <!-- ══ De wijnen ══════════════════════════════════════════ -->
+  <!-- ══ De wijnen / webshop ════════════════════════════════ -->
   <section class="section-sm" id="wijnen">
     <div class="container">
-      <div class="grid lg:grid-cols-[0.8fr_1.2fr] gap-10 lg:gap-16 items-start">
-        <!-- Echte fles, meescrollend -->
-        <div class="lg:sticky lg:top-28 text-center" data-anim="up">
-          <img src="/echt/fles-moestuin.png" alt="Wijndomein De Boe Moestuin, Auxerrois en Chardonnay" class="mx-auto h-[clamp(17rem,38vw,30rem)] w-auto object-contain" style="filter: drop-shadow(0 30px 45px rgba(44,34,24,0.22));" />
-          <div class="mt-5">
-            <div class="font-display text-2xl">Moestuin</div>
-            <div class="text-sm text-[color:var(--color-muted)] mt-1">Auxerrois &amp; Chardonnay, onze klassieker</div>
-          </div>
-        </div>
-        <!-- Lijst -->
-        <div>
-          <p class="eyebrow eyebrow--line" data-anim="up">Jaargang 2024 &amp; 2025</p>
-          <h2 class="sec-title mt-5" data-anim="up">Elf wijnen, <span class="accent-text">één terroir</span></h2>
-          <p class="lede mt-4 max-w-[52ch]" data-anim="up">
-            Elke wijn draagt een naam die teruggrijpt op het landgoed en de Zeeuwse geschiedenis. Van stil en wit tot mousserend volgens traditionele methode.
-          </p>
-          <div class="flex flex-wrap items-center justify-between gap-4 mt-8 mb-2">
-            <div class="seg" role="group" aria-label="Filter op type" data-anim="up">
-              {wineCats.map((c, i) => (
-                <button type="button" class="seg__btn" data-winefilter={c.key} aria-pressed={i === 0 ? "true" : "false"}>{c.label}</button>
-              ))}
-            </div>
-            <a href={site.webshop} target="_blank" rel="noopener" class="link-line text-sm" data-anim="up">Webshop <Icon name="arrowUpRight" size={15} /></a>
-          </div>
-          <div class="winelist" data-stagger>
-            {wines.map((wn) => (
-              <div class="wine-item" data-wine-item data-cat={wn.cat} data-anim="up">
-                <span class={`wine-item__swatch swatch-${wn.swatch}`} aria-hidden="true"></span>
-                <div>
-                  <div class="wine-item__name">{wn.name}</div>
-                  <div class="wine-item__meta">
-                    <span>{typeLabel[wn.cat]}</span>
-                    <span class="dotsep">{wn.grape}</span>
-                    <span class="dotsep">{wn.year}</span>
-                  </div>
-                  <p class="wine-item__note">{wn.note}</p>
-                </div>
-                <div class="wine-item__price"><span class="cur">€</span>{wn.price}</div>
-              </div>
-            ))}
-          </div>
-          <p class="text-[0.82rem] text-[color:var(--color-muted)] mt-8 leading-relaxed">
-            Prijzen per fles, zoals in onze eigen webshop. Niet elke jaargang is doorlopend beschikbaar.
-          </p>
+      <div class="text-center mb-10">
+        <p class="eyebrow eyebrow--line justify-center" data-anim="up">De wijnen &middot; jaargang 2024 &amp; 2025</p>
+        <h2 class="sec-title mt-5" data-anim="up">Elf wijnen, <span class="accent-text">één terroir</span></h2>
+        <p class="lede mx-auto mt-4 max-w-[56ch]" data-anim="up">
+          Elke wijn draagt een naam die teruggrijpt op het landgoed en de Zeeuwse geschiedenis. Van stil en wit tot mousserend volgens traditionele methode, rechtstreeks uit onze eigen webshop.
+        </p>
+      </div>
+
+      <div class="flex justify-center mb-9">
+        <div class="seg" role="group" aria-label="Filter op type" data-anim="up">
+          {wineCats.map((c, i) => (
+            <button type="button" class="seg__btn" data-winefilter={c.key} aria-pressed={i === 0 ? "true" : "false"}>{c.label}</button>
+          ))}
         </div>
       </div>
+
+      <div class="shop-grid" data-stagger>
+        {wines.map((wn) => (
+          <a href={wn.url} target="_blank" rel="noopener" class="shop-card" data-wine-item data-cat={wn.cat} data-anim="up">
+            <div class="shop-card__media">
+              <span class="shop-card__cat">{typeLabel[wn.cat]}</span>
+              <img src={wn.img} alt={`Fles ${wn.name}`} loading="lazy" />
+            </div>
+            <div class="shop-card__body">
+              <div class="shop-card__name">{wn.name}</div>
+              <div class="shop-card__meta">{wn.grape} &middot; {wn.year}</div>
+              <div class="shop-card__foot">
+                <div class="shop-card__price"><span class="cur">&euro;</span>{wn.price}</div>
+                <span class="shop-card__buy">Bestellen <Icon name="arrowUpRight" size={13} /></span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Cadeaus & extra's uit de webshop -->
+      <div class="mt-16">
+        <div class="text-center mb-7">
+          <p class="eyebrow eyebrow--line justify-center" data-anim="up">Ook in de webshop</p>
+          <h3 class="sec-title mt-4" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);" data-anim="up">Cadeaus &amp; <span class="accent-text">extra's</span></h3>
+        </div>
+        <div class="gift-grid" data-stagger>
+          {shop.map((g) => (
+            <a href={g.url} target="_blank" rel="noopener" class="gift-card" data-anim="up">
+              <span class="gift-card__icon"><Icon name={g.icon} size={24} stroke={1.5} /></span>
+              <div class="gift-card__name">{g.name}</div>
+              <p class="gift-card__note">{g.note}</p>
+              {g.price && <div class="gift-card__price">&euro; {g.price}</div>}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <p class="text-[0.82rem] text-[color:var(--color-muted)] mt-8 leading-relaxed text-center">
+        Prijzen per fles, zoals in de eigen webshop. Niet elke jaargang is doorlopend beschikbaar.
+      </p>
     </div>
   </section>
 

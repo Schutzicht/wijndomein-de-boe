@@ -77,23 +77,33 @@ export const journey = [
   },
 ];
 
-// Alle wijnen van het domein (eigen webshop-prijzen).
+// Alle wijnen van het domein, met de echte fles-shots en webshop-links.
+const SHOP = "https://wijndomeindeboe.nl/product";
 export const wines = [
   // Stille witte wijnen — jaargang 2025
-  { name: "Moestuin", cat: "wit", swatch: "wit", grape: "Auxerrois & Chardonnay", year: "2025", note: "Wit fruit, vol en rond.", price: "17,50" },
-  { name: "De Twi Gemete", cat: "wit", swatch: "wit", grape: "Pinot Gris", year: "2025", note: "Rijp, met citroen en perzik.", price: "17,50" },
-  { name: "Tuin van Zeeland", cat: "wit", swatch: "wit", grape: "Muscaris", year: "2025", note: "Stuivend fruitig en bloemig, een zomerse wijn.", price: "17,50" },
-  { name: "'t Hof Triton", cat: "wit", swatch: "wit", grape: "Souvignier Gris", year: "2025", note: "Krachtig, met dille en buxus.", price: "17,50" },
-  { name: "De Zes Oxhoofden", cat: "wit", swatch: "wit", grape: "Chardonnay, op hout", year: "2025", note: "Wit fruit met een subtiele toets eikenhout.", price: "20,00" },
-  { name: "De Bogerd", cat: "wit", swatch: "wit", grape: "Savagnin & Chardonnay", year: "2025", note: "Tropisch fruit, strak en gelaagd.", price: "22,50" },
+  { name: "Moestuin", cat: "wit", swatch: "wit", grape: "Auxerrois & Chardonnay", year: "2025", note: "Wit fruit, vol en rond.", price: "17,50", img: "/echt/wijnen/moestuin.png", url: `${SHOP}/moestuin-2025/` },
+  { name: "De Twi Gemete", cat: "wit", swatch: "wit", grape: "Pinot Gris", year: "2025", note: "Rijp, met citroen en perzik.", price: "17,50", img: "/echt/wijnen/de-twi-gemete.png", url: `${SHOP}/de-twi-gemete-2025-2/` },
+  { name: "Tuin van Zeeland", cat: "wit", swatch: "wit", grape: "Muscaris", year: "2025", note: "Stuivend fruitig en bloemig, een zomerse wijn.", price: "17,50", img: "/echt/wijnen/tuin-van-zeeland.png", url: `${SHOP}/tuin-van-zeeland-2025/` },
+  { name: "'t Hof Triton", cat: "wit", swatch: "wit", grape: "Souvignier Gris", year: "2025", note: "Krachtig, met dille en buxus.", price: "17,50", img: "/echt/wijnen/hof-triton.png", url: `${SHOP}/t-hof-triton-2025/` },
+  { name: "De Zes Oxhoofden", cat: "wit", swatch: "wit", grape: "Chardonnay, op hout", year: "2025", note: "Wit fruit met een subtiele toets eikenhout.", price: "20,00", img: "/echt/wijnen/de-zes-oxhoofden.png", url: `${SHOP}/de-zes-oxhoofden-2025/` },
+  { name: "De Bogerd", cat: "wit", swatch: "wit", grape: "Savagnin & Chardonnay", year: "2025", note: "Tropisch fruit, strak en gelaagd.", price: "22,50", img: "/echt/wijnen/de-bogerd.png", url: `${SHOP}/de-bogerd-2025/` },
   // Rode wijn — jaargang 2025
-  { name: "Clos & Driehoek", cat: "rood", swatch: "rood", grape: "Frühburgunder & Trousseau", year: "2025", note: "Fruitig, kruidig en mooi gestructureerd.", price: "26,00" },
+  { name: "Clos & Driehoek", cat: "rood", swatch: "rood", grape: "Frühburgunder & Trousseau", year: "2025", note: "Fruitig, kruidig en mooi gestructureerd.", price: "26,00", img: "/echt/wijnen/clos-driehoek.png", url: `${SHOP}/clos-driehoek-2025/` },
   // Dessertwijn — jaargang 2025
-  { name: "Tritons Hofjuweel", cat: "dessert", swatch: "dessert", grape: "Souvignier Gris, edelzoet", year: "2025", note: "Edelzoet, geconcentreerd en rijk. Per 0,375 liter.", price: "25,00" },
+  { name: "Tritons Hofjuweel", cat: "dessert", swatch: "dessert", grape: "Souvignier Gris, edelzoet", year: "2025", note: "Edelzoet, geconcentreerd en rijk. Per 0,375 liter.", price: "25,00", img: "/echt/wijnen/tritons-hofjuweel.png", url: `${SHOP}/tritons-hofjuweel-2025/` },
   // Mousserend (traditionele methode) — jaargang 2024
-  { name: "Blanc de Blancs Brut", cat: "mousserend", swatch: "mous", grape: "Chardonnay", year: "2024", note: "Mineraal, strak en elegant. Zeeuws alternatief voor champagne.", price: "30,00" },
-  { name: "Rosé Brut", cat: "mousserend", swatch: "rose", grape: "Pinot Noir & Pinot Noir précoce", year: "2024", note: "Rood fruit, met een zachte maar krachtige mousse.", price: "28,00" },
-  { name: "Tuin van Zeeland Brut", cat: "mousserend", swatch: "mous", grape: "Muscaris & Souvignier Gris", year: "2024", note: "Stuivend, bloemig en feestelijk.", price: "24,00" },
+  { name: "Blanc de Blancs Brut", cat: "mousserend", swatch: "mous", grape: "Chardonnay", year: "2024", note: "Mineraal, strak en elegant. Zeeuws alternatief voor champagne.", price: "30,00", img: "/echt/wijnen/blanc-de-blancs.jpg", url: `${SHOP}/blanc-de-blancs-2024/` },
+  { name: "Rosé Brut", cat: "mousserend", swatch: "rose", grape: "Pinot Noir & Pinot Noir précoce", year: "2024", note: "Rood fruit, met een zachte maar krachtige mousse.", price: "28,00", img: "/echt/wijnen/rose-brut.jpg", url: `${SHOP}/rose-brut-2024/` },
+  { name: "Tuin van Zeeland Brut", cat: "mousserend", swatch: "mous", grape: "Muscaris & Souvignier Gris", year: "2024", note: "Stuivend, bloemig en feestelijk.", price: "24,00", img: "/echt/wijnen/tuin-van-zeeland-brut.jpg", url: `${SHOP}/tuin-van-zeeland-brut-2024/` },
+];
+
+// Cadeaus en extra's uit de webshop.
+export const shop = [
+  { name: "Wijnkist", price: "5,00", img: "/echt/wijnen/wijnkist.png", icon: "bottle", note: "Houten geschenkkist voor één fles.", url: `${SHOP}/wijnkist/` },
+  { name: "Podcastpakket", price: null, img: "/echt/wijnen/podcast-pakket.jpg", icon: "bottle", note: "Wijn met de podcast over het domein.", url: `${SHOP}/podcast-pakket/` },
+  { name: "Cadeaubon", price: "10,00 – 100,00", img: null, icon: "gift", note: "Kies zelf het bedrag, te besteden in de webshop.", url: `${SHOP}/cadeaubon/` },
+  { name: "Adopteer een wijnrank", price: "20,00", img: null, icon: "grape", note: "Word peetouder van een rank in de wijngaard.", url: `${SHOP}/wijnrank/` },
+  { name: "Rondleiding & proeverij", price: "20,00", img: null, icon: "calendar", note: "Cadeaubon voor een bezoek met proeverij.", url: `${SHOP}/cadeaubon-rondleiding-proeverij/` },
 ];
 
 export const wineCats = [
