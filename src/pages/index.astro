@@ -156,14 +156,18 @@ const caps = [
   </section>
 
   <!-- ══ Pijlers ════════════════════════════════════════════ -->
-  <section class="section-sm">
+  <section class="section">
     <div class="container">
-      <div class="feature-grid" data-stagger>
-        {features.map((f) => (
-          <div class="feature" data-anim="up">
-            <span class="feature__icon"><Icon name={f.icon} size={26} stroke={1.5} /></span>
-            <h3>{f.title}</h3>
-            <p>{f.body}</p>
+      <div class="max-w-[40ch] mb-12" data-anim="up">
+        <p class="eyebrow eyebrow--line">Waarom hier</p>
+        <h2 class="sec-title mt-5">Drie dingen die <span class="accent-text">de wijn maken</span></h2>
+      </div>
+      <div class="pillars" data-stagger>
+        {features.map((f, i) => (
+          <div class="pillar" data-anim="up">
+            <div class="pillar__n">{String(i + 1).padStart(2, "0")}</div>
+            <h3 class="pillar__title">{f.title}</h3>
+            <p class="pillar__text">{f.body}</p>
           </div>
         ))}
       </div>
@@ -215,12 +219,12 @@ const caps = [
       <h2 class="sec-title mt-5" data-anim="up">De wijngaard &amp; de <span class="accent-text">zee</span></h2>
     </div>
     <div class="gallery-cols container-wide">
-      <div class="gallery-col" data-parallax="-7">
+      <div class="gallery-col" data-parallax="-18">
         <div class="gallery-item"><img src="/echt/sfeer/sfeer2.webp" alt="De schuur met eikenhouten vaten bij zonsopkomst" loading="lazy" /></div>
         <div class="gallery-item"><img src="/echt/sfeer/oogst.webp" alt="Met de hand geoogste druiventros" loading="lazy" /></div>
         <div class="gallery-item"><img src="/echt/sfeer/drone1.webp" alt="Luchtfoto van de wijngaardrijen" loading="lazy" /></div>
       </div>
-      <div class="gallery-col gallery-col--b" data-parallax="7">
+      <div class="gallery-col gallery-col--b" data-parallax="8">
         <div class="gallery-item"><img src="/echt/sfeer/promo59.webp" alt="Een bijeenkomst tussen de ranken op het domein" loading="lazy" /></div>
         <div class="gallery-item"><img src="/echt/sfeer/sfeer1.webp" alt="De gegraveerde De Boe-wijnglazen" loading="lazy" /></div>
         <div class="gallery-item"><img src="/echt/sfeer/drone4.webp" alt="Gouden veld bij het domein in de avondzon" loading="lazy" /></div>
@@ -320,11 +324,12 @@ const caps = [
   <!-- ══ Kerncijfers ════════════════════════════════════════ -->
   <section class="section-sm">
     <div class="container">
-      <div class="stat-row border-t border-[color:var(--color-stroke)] pt-12" data-stagger>
+      <div class="kpis" data-stagger>
         {stats.map((s) => (
           <div data-anim="up">
-            <div class="stat__n accent-text">{s.n}</div>
-            <div class="stat__l">{s.l}</div>
+            <div class="kpi__n">{s.n}</div>
+            <div class="kpi__rule"></div>
+            <div class="kpi__l">{s.l}</div>
           </div>
         ))}
       </div>
@@ -338,14 +343,14 @@ const caps = [
         <p class="eyebrow eyebrow--line justify-center">Gasten aan het woord</p>
         <h2 class="sec-title mt-5">Geproefd en <span class="accent-text">geliefd</span></h2>
       </div>
-      <div class="reviews" data-stagger>
+      <div class="testi-grid" data-stagger>
         {reviews.map((r) => (
-          <div class="review" data-anim="up">
-            <div class="review__stars">{Array.from({ length: 5 }).map(() => <Icon name="star" size={15} stroke={0} class="fill-current" />)}</div>
-            <p class="review__q">&ldquo;{r.q}&rdquo;</p>
-            <div class="review__foot">
-              <div><div class="review__name">{r.name}</div><div class="text-[0.74rem] text-[color:var(--color-muted)]">{r.place}</div></div>
-              <div class="review__src">{r.src}</div>
+          <div class="testi" data-anim="up">
+            <span class="testi__mark" aria-hidden="true">&ldquo;</span>
+            <p class="testi__q">{r.q}</p>
+            <div class="testi__by">
+              <div><div class="testi__name">{r.name}</div><div class="testi__place">{r.place}</div></div>
+              <div class="testi__score">{r.src}</div>
             </div>
           </div>
         ))}
