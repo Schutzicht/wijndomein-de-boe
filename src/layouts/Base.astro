@@ -266,8 +266,10 @@ const jsonLd = {
         const STAGES = 8;                                   // 8 etappes, 9 haltes (de keyframes)
         const stops = Array.from({ length: STAGES + 1 }, (_, i) => i / STAGES);
         const small = window.matchMedia("(max-width: 820px)").matches;
-        const fdir = small ? "/film/frames-sm/" : "/film/frames/"; // lichtere frames op mobiel
-        const dpr = Math.min(window.devicePixelRatio || 1, small ? 1 : 1.5);
+        // Op mobiel ook de full-res frames: staand scherm cropt liggend beeld en schaalt het fors op,
+        // dus lage-res frames + dpr 1 werden wazig. dpr 2 op mobiel voorkomt extra uitrekken op retina.
+        const fdir = "/film/frames/";
+        const dpr = Math.min(window.devicePixelRatio || 1, small ? 2 : 1.5);
         let cover = { dw: 0, dh: 0, dx: 0, dy: 0 };
 
         function computeCover() {
