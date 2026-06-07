@@ -10,10 +10,11 @@
   --color-bg: #f7f2e8;
   --color-surface: #fffdf8;
   --color-surface-2: #efe6d6;
-  --color-text: #2c2218;
+  --color-text: #241a12;
   --color-muted: #6b5f4d;
   --color-stroke: #e4d9c6;
-  --color-accent-a: #ad8836; /* antique gold */
+  --color-ink: #1d140d;      /* diep warm ink (donkere vlakken, footer) */
+  --color-accent-a: #9a7d45; /* gedempt koper-goud (rustiger dan fel goud) */
   --color-accent-b: #7a1d2e; /* deep wine */
   --color-sea: #5f7f72;      /* Zeeuws sea-green */
 
@@ -81,9 +82,9 @@ section[id], footer[id] { scroll-margin-top: 96px; }
 .cinema .accent-text, .film-fallback .accent-text { color: #e6bd63; }
 
 /* ── Typografie ───────────────────────────────────────────── */
-.font-display { font-family: var(--font-display); font-weight: 500; line-height: 1.0; letter-spacing: 0; }
+.font-display { font-family: var(--font-display); font-weight: 500; line-height: 1.0; letter-spacing: -0.012em; font-variation-settings: "opsz" 140; }
 .italic { font-style: normal; }
-h1, h2, h3 { font-family: var(--font-display); font-weight: 500; line-height: 1.04; color: var(--color-text); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; line-height: 1.04; letter-spacing: -0.012em; color: var(--color-text); font-variation-settings: "opsz" 140; }
 
 .eyebrow { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.34em; color: #8a6a23; display: inline-flex; align-items: center; gap: 0.9rem; }
 .eyebrow--line::before { content: ""; width: 2.4rem; height: 1px; background: var(--color-accent-a); opacity: 0.8; }
@@ -110,9 +111,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; line-height: 1.
 .btn {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
   padding: 1.05rem 2.1rem; border-radius: 999px;
-  font-family: var(--font-body); font-weight: 500; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+  font-family: var(--font-body); font-weight: 500; font-size: 0.94rem; letter-spacing: 0;
   cursor: pointer; border: 1px solid transparent; white-space: nowrap;
-  transition: transform 0.4s var(--ease-out), background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  transition: transform 0.3s var(--ease-out), background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .btn:active { transform: scale(0.97); }
 .btn svg { transition: transform 0.3s var(--ease-out); }
@@ -124,7 +125,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; line-height: 1.
 .btn-ring { position: relative; }
 .btn-ring::before { content: ""; position: absolute; inset: -1.5px; border-radius: 999px; background: linear-gradient(90deg, var(--color-accent-a), var(--color-accent-b)); opacity: 0; transition: opacity 0.3s ease; z-index: -1; }
 @media (hover: hover) and (pointer: fine) {
-  .btn-solid:hover { background: transparent; color: var(--color-text); border-color: var(--color-text); }
+  .btn-solid:hover { background: var(--color-accent-a); color: #fffdf8; border-color: transparent; transform: translateY(-1px); }
   .btn-solid:hover svg, .btn-outline:hover svg, .btn-ghost:hover svg, .btn-wine:hover svg, .btn-gold:hover svg { transform: translateX(3px); }
   .btn-outline:hover { border-color: var(--color-accent-a); color: var(--color-accent-b); }
   .btn-wine:hover { background: #8f2335; box-shadow: 0 12px 30px -12px rgba(122,29,46,0.5); }
@@ -397,7 +398,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; line-height: 1.
 @media (hover: hover) and (pointer: fine) { .seg__btn:not([aria-pressed="true"]):hover { color: var(--color-text); background: rgba(44,34,24,0.05); } }
 
 /* ── Footer ───────────────────────────────────────────────── */
-.foot { position: relative; overflow: hidden; background: var(--color-surface-2); }
+.foot { position: relative; overflow: hidden; background: var(--color-ink); color: #f3ead9; --color-text: #f3ead9; --color-muted: rgba(243,235,221,0.62); --color-stroke: rgba(243,235,221,0.16); --color-surface: rgba(243,235,221,0.05); }
+.foot .accent-text { color: #d8b15a; }
+.foot .marquee__row span { color: rgba(243,235,221,0.14); }
+.foot img[alt="Wijndomein De Boe"] { filter: brightness(0) invert(1); opacity: 0.9; }
 .foot__in { position: relative; z-index: 2; }
 .foot__dot { width: 8px; height: 8px; border-radius: 999px; background: var(--color-sea); box-shadow: 0 0 0 0 rgba(95,127,114,0.5); animation: pulse 2.4s ease-out infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(95,127,114,0.45); } 70% { box-shadow: 0 0 0 8px rgba(95,127,114,0); } 100% { box-shadow: 0 0 0 0 rgba(95,127,114,0); } }
