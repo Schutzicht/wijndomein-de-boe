@@ -8,3 +8,7 @@ node_modules/
 .astro/
 # system
 .DS_Store
+
+# zware tussenbestanden (niet nodig voor runtime)
+public/film/clips/
+public/film/_tmp/
