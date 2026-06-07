@@ -214,20 +214,25 @@ const caps = [
 
   <!-- ══ Galerij (parallax) ════════════════════════════════ -->
   <section class="section overflow-hidden">
-    <div class="container text-center mb-2">
-      <p class="eyebrow eyebrow--line justify-center" data-anim="up">In beeld</p>
-      <h2 class="sec-title mt-5" data-anim="up">De wijngaard &amp; de <span class="accent-text">zee</span></h2>
+    <div class="container">
+      <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 mb-10 md:mb-14">
+        <div>
+          <p class="eyebrow eyebrow--line" data-anim="up">In beeld</p>
+          <h2 class="sec-title mt-5" data-anim="up">De wijngaard <span class="accent-text">&amp; de zee</span></h2>
+        </div>
+        <p class="lede max-w-[34ch]" data-anim="up">Het domein, de oogst en het glas, gevangen op Walcheren.</p>
+      </div>
     </div>
     <div class="gallery-cols container-wide">
-      <div class="gallery-col" data-parallax="-18">
-        <div class="gallery-item"><img src="/echt/sfeer/sfeer2.webp" alt="De schuur met eikenhouten vaten bij zonsopkomst" loading="lazy" /></div>
-        <div class="gallery-item"><img src="/echt/sfeer/oogst.webp" alt="Met de hand geoogste druiventros" loading="lazy" /></div>
-        <div class="gallery-item"><img src="/echt/sfeer/drone1.webp" alt="Luchtfoto van de wijngaardrijen" loading="lazy" /></div>
+      <div class="gallery-col">
+        <div class="gallery-item"><img src="/echt/sfeer/sfeer2.webp" alt="De schuur met eikenhouten vaten bij zonsopkomst" data-parallax="9" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/oogst.webp" alt="Met de hand geoogste druiventros" data-parallax="9" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/drone1.webp" alt="Luchtfoto van de wijngaardrijen" data-parallax="9" loading="lazy" /></div>
       </div>
-      <div class="gallery-col gallery-col--b" data-parallax="8">
-        <div class="gallery-item"><img src="/echt/sfeer/promo59.webp" alt="Een bijeenkomst tussen de ranken op het domein" loading="lazy" /></div>
-        <div class="gallery-item"><img src="/echt/sfeer/sfeer1.webp" alt="De gegraveerde De Boe-wijnglazen" loading="lazy" /></div>
-        <div class="gallery-item"><img src="/echt/sfeer/drone4.webp" alt="Gouden veld bij het domein in de avondzon" loading="lazy" /></div>
+      <div class="gallery-col gallery-col--b">
+        <div class="gallery-item"><img src="/echt/sfeer/promo59.webp" alt="Een bijeenkomst tussen de ranken op het domein" data-parallax="-5" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/sfeer1.webp" alt="De gegraveerde De Boe-wijnglazen" data-parallax="-5" loading="lazy" /></div>
+        <div class="gallery-item"><img src="/echt/sfeer/drone4.webp" alt="Gouden veld bij het domein in de avondzon" data-parallax="-5" loading="lazy" /></div>
       </div>
     </div>
   </section>
