@@ -18,7 +18,7 @@ const {
   description = "Wijndomein De Boe is een jonge wijngaard op het zilte terroir van Walcheren. Beleef de reis van de druif tot de wijn, ontdek onze wijnen van zee en zon en plan je bezoek.",
   ogImage = "/film/keyframes/k7_bottle.png",
 } = Astro.props;
-const siteUrl = Astro.site ?? "https://demo-wijndomein-de-boe.vercel.app";
+const siteUrl = Astro.site ?? "https://wijndomein-de-boe.vercel.app";
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const ogImageAbs = new URL(ogImage, siteUrl).href;
 
