@@ -114,7 +114,8 @@ const caps = [
   </section>
 
   <!-- ══ De naam ════════════════════════════════════════════ -->
-  <section class="section-sm">
+  <section class="section-sm deco-host">
+    <img src="/echt/illustratie.webp" alt="" aria-hidden="true" class="deco-illu deco-illu--bl" loading="lazy" width="1100" height="927" />
     <div class="container">
       <div class="split split--wide-text" data-stagger>
         <div>
@@ -281,27 +282,44 @@ const caps = [
         ))}
       </div>
 
-      <!-- Cadeaus & extra's uit de webshop -->
-      <div class="mt-16">
-        <div class="text-center mb-7">
-          <p class="eyebrow eyebrow--line justify-center" data-anim="up">Ook in de webshop</p>
-          <h3 class="sec-title mt-4" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);" data-anim="up">Cadeaus &amp; <span class="accent-text">extra's</span></h3>
-        </div>
-        <div class="gift-grid" data-stagger>
-          {shop.map((g) => (
-            <a href={g.url} target="_blank" rel="noopener" class="gift-card" data-anim="up">
-              <span class="gift-card__icon"><Icon name={g.icon} size={24} stroke={1.5} /></span>
-              <div class="gift-card__name">{g.name}</div>
-              <p class="gift-card__note">{g.note}</p>
-              {g.price && <div class="gift-card__price">&euro; {g.price}</div>}
-            </a>
-          ))}
-        </div>
-      </div>
-
-      <p class="text-[0.82rem] text-[color:var(--color-muted)] mt-8 leading-relaxed text-center">
+      <p class="text-[0.82rem] text-[color:var(--color-muted)] mt-9 leading-relaxed text-center">
         Prijzen per fles, zoals in de eigen webshop. Niet elke jaargang is doorlopend beschikbaar.
       </p>
+    </div>
+  </section>
+
+  <!-- ══ Cadeaus & extra's ══════════════════════════════════ -->
+  <section class="section-sm gifts deco-host" aria-labelledby="gifts-h">
+    <img src="/echt/illustratie.webp" alt="" aria-hidden="true" class="deco-illu deco-illu--br" loading="lazy" width="1100" height="927" />
+    <div class="container">
+      <div class="gifts__grid">
+        <div class="gifts__intro">
+          <p class="eyebrow eyebrow--line" data-anim="up">Ook in de webshop</p>
+          <h2 id="gifts-h" class="sec-title mt-4" data-anim="up">Cadeaus &amp; <span class="accent-text">extra's</span></h2>
+          <p class="lede mt-5" data-anim="up">
+            Geef Zeeland cadeau. Een fles uit eigen grond in een houten kist, een rondleiding met proeverij, of word peetouder van je eigen wijnrank.
+          </p>
+          <a href={site.webshop} target="_blank" rel="noopener" class="btn btn-solid mt-8" data-anim="up">
+            Naar de webshop <Icon name="arrowUpRight" size={14} stroke={1.8} />
+          </a>
+        </div>
+        <ol class="gifts__list" data-stagger>
+          {shop.map((g, i) => (
+            <li class="grow-li">
+              <a href={g.url} target="_blank" rel="noopener" class="grow" data-anim="up">
+                <span class="grow__idx">{String(i + 1).padStart(2, "0")}</span>
+                <span class="grow__ic"><Icon name={g.icon} size={20} stroke={1.5} /></span>
+                <span class="grow__main">
+                  <span class="grow__name">{g.name}</span>
+                  <span class="grow__note">{g.note}</span>
+                </span>
+                <span class="grow__price">{g.price ? (<><span class="cur">&euro;</span> {g.price}</>) : "Bekijk"}</span>
+                <span class="grow__arrow"><Icon name="arrowUpRight" size={16} stroke={1.7} /></span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   </section>
 
