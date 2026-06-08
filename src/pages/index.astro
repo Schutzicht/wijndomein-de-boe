@@ -404,7 +404,8 @@ const caps = [
           });
         });
       }
-      if (!window.__wineListener) { window.__wineListener = true; document.addEventListener("astro:page-load", setup); }
+      if (document.readyState !== "loading") setup();
+      else document.addEventListener("DOMContentLoaded", setup);
     })();
   </script>
 </Base>

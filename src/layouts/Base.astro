@@ -5,7 +5,6 @@ import Footer from "../components/Footer.astro";
 import ReserveModal from "../components/ReserveModal.astro";
 import Icon from "../components/Icon.astro";
 import Analytics from "@vercel/analytics/astro";
-import { ClientRouter } from "astro:transitions";
 import { site, wines } from "../data/site";
 
 interface Props {
@@ -96,7 +95,6 @@ const jsonLd = {
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 
-    <ClientRouter />
     <title>{title}</title>
   </head>
   <body>
@@ -188,11 +186,12 @@ const jsonLd = {
 
       // ── Soepel ankerscrollen (één lange pagina); scroll-margin-top vangt de nav-pill op ──
       function scrollToHash(hash: string) {
-        if (hash === "#top") { w.__lenis ? w.__lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+        if (hash === "#top") { w.__lenis ? w.__lenis.scrollTo(0, { duration: 1.1 }) : window.scrollTo({ top: 0, behavior: "smooth" }); return; }
         const target = document.querySelector<HTMLElement>(hash);
         if (!target) return;
-        if (w.__lenis) w.__lenis.scrollTo(target, { offset: -90 });
-        else target.scrollIntoView({ behavior: "smooth" });
+        const y = target.getBoundingClientRect().top + window.scrollY - 80;
+        if (w.__lenis) w.__lenis.scrollTo(y, { duration: 1.1 });
+        else window.scrollTo({ top: y, behavior: "smooth" });
       }
 
       if (!w.__deboeWin) {
@@ -400,7 +399,8 @@ const jsonLd = {
         ScrollTrigger.refresh();
       }
 
-      document.addEventListener("astro:page-load", setupPage);
+      if (document.readyState !== "loading") setupPage();
+      else document.addEventListener("DOMContentLoaded", setupPage);
     </script>
   </body>
 </html>
